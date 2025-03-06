@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Agregar Propiedad</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <p>
+            <label for="{{ imagen_form.imagenes.id_for_label }}">Imágenes:</label>
+            <input type="file" name="imagenes" multiple id="{{ imagen_form.imagenes.id_for_label }}">
+        </p>
+
+        <button type="submit" class="btn btn-success">Guardar</button>
+    </form>
+</div>
+{% endblock %}

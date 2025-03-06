@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Solicitar Tasación</h2>
+    {% if enviado %}
+        <div class="alert alert-success">¡Gracias! Hemos recibido tu solicitud de tasación.</div>
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn mb-4"style="background-color: #00204A; color: #fff;">Enviar</button>
+        </form>
+    {% endif %}
+</div>
+{% endblock %}

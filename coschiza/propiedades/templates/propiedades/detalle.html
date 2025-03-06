@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6 text-center">
+            <!-- Mostrar una imagen si solo hay una -->
+        {% if propiedad.imagenes.count == 1 %}
+        <div class="col-12">
+            <img src="{{ propiedad.imagenes.first.imagen.url }}" class="d-block w-100 img-fluid object-fit-cover" style="height: 300px;" alt="Imagen de la propiedad">
+        </div>
+    {% elif propiedad.imagenes.count > 1 %}
+        <div class="col-12">
+            <div id="propertyCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for imagen in propiedad.imagenes.all %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img src="{{ imagen.imagen.url }}" class="d-block w-100 img-fluid object-fit-cover" style="height: 300px;" alt="Imagen de la propiedad">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        {% endif %}
+            {% if propiedad.estado_publicacion %}
+            <p class="mt-2" style="background-color: #ff0800; color: white; padding: 5px 10px; border-radius: 5px;">
+                <strong>{{ propiedad.get_estado_publicacion_display }}</strong> 
+            </p>
+        {% endif %}
+       
+
+        </div>
+
+        <div class="col-md-6">
+            <h2>{{ propiedad.titulo }}</h2>
+            <hr>
+            <p><strong>Dirección:</strong> {{ propiedad.direccion }}</p>
+            <p><strong>Localidad:</strong> {{ propiedad.localidad }}</p>
+            <p><strong>Precio:</strong> ${{ propiedad.precio }}</p>
+            <p><strong>Estado:</strong> {{ propiedad.estado }}</p>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">Características Principales</h5>
+                    <p><strong>Superficie Cubierta:</strong> {{ propiedad.superficie_cubierta }} m²</p>
+                    <p><strong>Superficie Total:</strong> {{ propiedad.superficie_total }} m²</p>
+                    <p><strong>Dormitorios:</strong> {{ propiedad.dormitorio }} </p>
+                    <p><strong>Baños:</strong> {{ propiedad.cantidad_banos }} </p>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">Características Generales</h5>
+                    <p><strong>Cochera Fija:</strong> {% if propiedad.cochera_fija %}Sí{% else %}No{% endif %}</p>
+                    <p><strong>Amueblado:</strong> {% if propiedad.amueblado %}Sí{% else %}No{% endif %}</p>
+                    <p><strong>Gas Natural:</strong> {% if propiedad.gas_natural %}Sí{% else %}No{% endif %}</p>
+                    <p><strong>Desagües Cloacales:</strong> {% if propiedad.desagues_cloacales %}Sí{% else %}No{% endif %}</p>
+                    <p><strong>Categoría del Edificio:</strong> {{ propiedad.categoria_edificio }}</p>
+                </div>
+            </div>
+
+            <a href="{% url 'lista_propiedades' %}" class="btn  mt-4 mb-4"style="background-color: #00204A; color: #fff;">Volver</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

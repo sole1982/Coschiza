@@ -1,0 +1,298 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+<style>
+.hero {
+    position: relative;
+    height: 100vh; /* Ajusta la altura del hero */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+.hero .container {
+    position: relative;
+    z-index: 2; /* Hace que el contenido (logo y texto) esté sobre las imágenes */
+}
+
+.hero-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Envía las imágenes al fondo */
+    display: flex;
+    overflow: hidden;
+}
+
+.hero-slide .img {
+    flex: 1;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+   
+
+    .filtro-form {
+    max-width: 800px;
+    margin: auto;
+}
+
+.filtro-form {
+    max-width: 800px;
+    margin: auto;
+}
+
+.filtro-group {
+    flex: 1; /* Hace que los selects ocupen el mismo espacio */
+    min-width: 200px; /* Asegura que los inputs no sean demasiado pequeños */
+}
+
+.filtro-input {
+    height: 45px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    padding: 5px 15px;
+    background: #f8f9fa;
+    transition: all 0.3s ease-in-out;
+}
+
+.filtro-input:focus {
+    border-color: #212529;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.filtro-btn {
+    height: 45px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+    white-space: nowrap; /* Evita que el texto se corte */
+}
+
+.filtro-btn:hover {
+    background-color: #000;
+    color: #fff;
+}
+.wrap-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px; /* Tamaño del círculo */
+  height: 40px; /* Tamaño del círculo */
+  border-radius: 50%; /* Hace el círculo */
+  background-color: #007bff; /* Color de fondo del círculo (puedes cambiarlo) */
+  color: white; /* Color del icono */
+  font-size: 20px; /* Tamaño del icono */
+}
+
+.feature-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Asegurar que en móviles se vean bien */
+@media (max-width: 768px) {
+    .filtro-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+
+}
+</style>
+<div class="hero">
+    <div class="container position-relative">
+        <div class="row justify-content-center align-items-center text-center">
+            <div class="col-lg-9 mt-5">
+                <a href="#" class="logo d-flex align-items-center justify-content-center">
+                    <img src="{% static 'images/logo.svg' %}" alt="Coschiza Propiedades Logo" class="me-2 logo-img">
+                </a>
+                <h1 class="heading" data-aos="fade-up">
+                    La forma más fácil de encontrar la casa de tus sueños
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Slide (Imágenes de fondo) -->
+    <div class="hero-slide">
+        <div class="img " style="background-image: url('{% static "images/hero_bg_9.jpg" %}')"></div>
+      
+    </div>
+</div>
+
+
+<form method="get" class="filtro-form d-flex flex-wrap justify-content-center align-items-center gap-2 mt-2">
+    <div class="filtro-group">
+        <select name="tipo" class="form-select filtro-input">
+            <option value="">Todos los tipos</option>
+            <option value="casa">Casa</option>
+            <option value="departamento">Departamento</option>
+            <option value="ph">PH</option>
+            <option value="terreno">Terreno</option>
+            <option value="local">Local Comercial</option>
+            <option value="oficina">Oficina</option>
+        </select>
+    </div>
+
+    <div class="filtro-group">
+        <select name="estado" class="form-select filtro-input">
+            <option value="">Todos</option>
+            <option value="venta">En Venta</option>
+            <option value="alquiler">En Alquiler</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn  filtro-btn"  style="background-color: #00204A; color: #fff;"     >🔍 Buscar</button>
+</form>
+
+
+
+
+
+<div class="container mt-4">
+    <h2>Propiedades</h2>
+    <a href="{% url 'agregar_propiedad' %}" class="btn btn-primary mb-3">Agregar Propiedad</a>
+    <div class="row">
+      {% for propiedad in propiedades %}
+          <div class="col-12 col-sm-6 col-md-4 mb-4">
+              <div class="card h-100">
+                  {% if propiedad.imagenes.first %}
+                      <img src="{{ propiedad.imagenes.first.imagen.url }}" class="card-img-top" alt="Imagen de {{ propiedad.titulo }}">
+                  {% else %}
+                      <div class="text-center p-3">No hay imagen disponible</div>
+                  {% endif %}
+                  <div class="card-body">
+                      <h2 class="btn btn-success">{{ propiedad.estado_publicacion }} </h2>-<h2 class="btn btn-secondary"     >{{ propiedad.localidad }}</h2>
+                      <h5 class="card-title">{{ propiedad.titulo }}</h5>
+                      <p class="card-text">{{ propiedad.direccion }}, {{ propiedad.localidad }}</p>
+                      <p class="card-text"><strong>Precio:</strong> ${{ propiedad.precio }}</p>
+                      <a href="{% url 'detalle_propiedad' propiedad.id %}" class="btn "  style="background-color: #00204A; color: #fff;"     >Ver más</a>
+                  </div>
+              </div>
+          </div>
+      {% empty %}
+          <p>No hay propiedades disponibles.</p>
+      {% endfor %}
+  </div>
+</div>
+<section class="features-1">
+    <div class="container">
+      <div class="row">
+        <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+          <div class="box-feature">
+            <span class="flaticon-house"></span>
+            <h3 class="mb-3">Propiedades Nuevas</h3>
+            <p>
+              Casas en ventas sin estrenar.
+            </p>
+            <p><a href="{% url 'lista_propiedades' %}?estado=venta" class="learn-more">Leer más</a></p>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="500">
+          <div class="box-feature">
+            <span class="flaticon-building"></span>
+            <h3 class="mb-3">Propiedades para Alquilar</h3>
+            <p>
+         Los mejores lugares para alquilar.
+            </p>
+            <p><a href="{% url 'lista_propiedades' %}?estado=alquiler" class="learn-more">Leer más</a></p>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
+          <div class="box-feature">
+            <span class="flaticon-house-3"></span>
+            <h3 class="mb-3">Contactate con un Agente</h3>
+            <p>
+             Escribinos y te estaremos contestando a la brevedad.
+            </p>
+            <p><a href="#footer" class="learn-more">Leer más</a></p>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3" data-aos="fade-up" data-aos-delay="600">
+          <div class="box-feature">
+            <span class="flaticon-house-1"></span>
+            <h3 class="mb-3">Casas de Verano</h3>
+            <p>
+              Casas de veraneo para toda la familia.
+            </p>
+            <p><a href="{% url 'lista_propiedades' %}?estado=casa_verano" class="learn-more">Leer más</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+      <div class="section section-4 bg-light">
+        <section class="featured-property py-5 bg-light">
+            <div class="container">
+                <div class="row justify-content-center text-center mb-5">
+                    <div class="col-lg-5">
+                        <h2 class="font-weight-bold heading text-dark mb-4">Encuentra la casa perfecta para ti</h2>
+                        <p class="text-black-50">Tenemos todas las opciones para que puedas ver y decidir cuál es tu mejor versión.</p>
+                    </div>
+                </div>
+                
+                {% if casa_principal %}
+                <div class="row justify-content-between mb-5">
+                  <div class="col-lg-7 mb-5 mb-lg-0 order-lg-2">
+                        <div class="img-about dots">
+                          {% if casa_principal.imagenes.first %}
+                          <img src="{{ casa_principal.imagenes.first.imagen.url }}" alt="{{ casa_principal.titulo }}" class="img-fluid rounded shadow">
+                      {% else %}
+                          <p>No hay imagen disponible para esta propiedad.</p>
+                      {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                      <h3 class="heading">{{ casa_principal.titulo }}</h3>
+                  
+                      <div class="d-flex feature-h">
+                        <span class="wrap-icon me-3" style="display: flex; justify-content: center; align-items: center; width: 80px; height: 80px; color: black; font-size: 20px;">
+                          <span class="fas fa-align-left"></span>
+                        </span>
+                        <div class="feature-text">
+                          <h3 class="heading">Descripción</h3>
+                          <p class="text-black-50">{{ casa_principal.descripcion }}</p>
+                        </div>
+                      </div>
+                      <div class="d-flex feature-h">
+                        <span class="wrap-icon me-3" style="display: flex; justify-content: center; align-items: center; width: 80px; height: 80px; color: black; font-size: 20px;">
+                          <span class="fas fa-map-marker-alt"></span>
+                        </span>
+                        <div class="feature-text">
+                          <h3 class="heading">Localidad</h3>
+                          <p class="text-black-50">{{ casa_principal.localidad }}</p>
+                        </div>
+                      </div>
+                      <div class="d-flex feature-h">
+                        <span class="wrap-icon me-3" style="display: flex; justify-content: center; align-items: center; width: 80px; height: 80px; color: black; font-size: 20px;">
+                          <span class="fa-regular fa-calendar-check"></span>
+                        </span>
+                        <div class="feature-text">
+                          <h3 class="heading">Disponibilidad</h3>
+                          <p class="text-black-50">{{ casa_principal.estado_publicacion }}</p>
+                        </div>
+                      </div>
+                      <a href="#" class="btn " style="background-color: #00204A; color: #fff;">
+                          <i class="fas fa-arrow-right mr-2"></i>Ver Detalles
+                      </a>
+                  </div>
+                  
+                </div>
+                {% else %}
+                <p>No hay casa principal disponible en este momento.</p>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+{% endblock %}

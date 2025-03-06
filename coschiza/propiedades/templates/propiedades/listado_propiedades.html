@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+
+  {% block content %}
+  <style>
+    body{
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+  </style>
+  <div class="container mt-5 pt-5">
+    <h2 class="text-center">Propiedades Disponibles</h2>
+    <form method="GET" class="my-4 d-flex justify-content-center">
+      <select name="tipo" class="form-select w-auto mx-2">
+        <option value="">Todos los tipos</option>
+        <option value="Casa">Casa</option>
+        <option value="Departamento">Departamento</option>
+      </select>
+      <select name="estado" class="form-select w-auto mx-2">
+        <option value="">Todos los estados</option>
+        <option value="venta">Venta</option>
+        <option value="alquiler">Alquiler</option>
+      </select>
+      <button type="submit" class="btn btn-danger">Filtrar</button>
+    </form>
+
+    <div class="row">
+      {% for propiedad in propiedades %}
+      <div class="col-md-4">
+        <div class="card mb-4">
+          <img src="{{ propiedad.imagenes.url }}" class="card-img-top" alt="Imagen de la propiedad">
+          <div class="card-body">
+            <h5 class="card-title">{{ propiedad.tipo_propiedad }} en {{ propiedad.estado_publicacion }}</h5>
+            <p class="card-text">Ubicación: {{ propiedad.direccion }}</p>
+            <p class="card-text">Superficie: {{ propiedad.superficie_total }} m²</p>
+            <p class="card-text">Baños: {{ propiedad.cantidad_banos }}</p>
+            <a href="#" class="btn btn-dark">Ver Detalles</a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <p class="text-center">No hay propiedades disponibles con los filtros seleccionados.</p>
+      {% endfor %}
+    </div>
+  </div>
+</body>
+
+{% endblock %}
